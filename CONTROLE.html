@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controlador Placar - Yoshi</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: #fff; padding: 20px; }
+        .section { background: #333; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .flex { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        button { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-add { background: #28a745; color: white; }
+        .btn-sub { background: #dc3545; color: white; }
+        .btn-reset { background: #ffc107; color: black; }
+        .btn-main { background: #007bff; color: white; padding: 15px; }
+        input { padding: 8px; border-radius: 4px; border: 1px solid #555; background: #444; color: white; width: 100%; box-sizing: border-box; }
+        label { font-size: 0.9em; color: #ccc; }
+    </style>
+</head>
+<body>
+
+    <h2>Controle de Jogo</h2>
+
+    <div class="section">
+        <label>Tempo: <span id="display-time">00:00</span></label>
+        <div class="flex">
+            <button class="btn-add" id="btn-play">PLAY</button>
+            <button class="btn-sub" id="btn-pause">PAUSE</button>
+            <button class="btn-reset" id="btn-reset-timer">RESET TEMPO</button>
+        </div>
+        <div class="flex" style="margin-top:10px;">
+            <select id="periodo-select" style="padding:10px; flex-grow:1;">
+                <option value="1° Tempo ">1° T</option>
+                <option value="2° Tempo ">2° T</option>
+                <option value="1° Prorrogação">Prorrogação</option>
+                <option value="2° Prorrogação">Prorrogação</option>
+                <option value="Pênaltis">Pênaltis</option>
+
+               <option value="1°Tempo +1min">1° Tempo +1min</option>
+               <option value="1°Tempo +2min">1° Tempo +2min</option>
+               <option value="1°Tempo +3min">1° Tempo +3min</option>
+               <option value="1°Tempo +4min">1° Tempo +4min</option>
+               <option value="1°Tempo +5min">1° Tempo +5min</option>
+               <option value="1°Tempo +6min">1° Tempo +6min</option>
+               <option value="1°Tempo +7min">1° Tempo +7min</option>
+               <option value="1°Tempo +8min">1° Tempo +8min</option>
+               <option value="1°Tempo +9min">1° Tempo +9min</option>
+               <option value="1°Tempo +10min">1° Tempo +10min</option>
+               <option value="1°Tempo +11min">1° Tempo +11min</option>
+               <option value="1°Tempo +12min">1° Tempo +12min</option>
+
+               <option value="2°Tempo +1min">2° Tempo +1min</option>
+               <option value="2°Tempo +2min">2° Tempo +2min</option>
+               <option value="2°Tempo +3min">2° Tempo +3min</option>
+               <option value="2°Tempo +4min">2° Tempo +4min</option>
+               <option value="2°Tempo +5min">2° Tempo +5min</option>
+               <option value="2°Tempo +6min">2° Tempo +6min</option>
+               <option value="2°Tempo +7min">2° Tempo +7min</option>
+               <option value="2°Tempo +8min">2° Tempo +8min</option>
+               <option value="2°Tempo +9min">2° Tempo +9min</option>
+               <option value="2°Tempo +10min">2° Tempo +10min</option>
+               <option value="2°Tempo +11min">2° Tempo +11min</option>
+               <option value="2°Tempo +12min">2° Tempo +12min</option>
+
+
+            </select>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="flex">
+            <div style="flex:1">
+                <input type="text" id="in-name1" placeholder="Nome Time 1">
+                <input type="text" id="in-logo1" placeholder="Link Brasão 1" style="margin-top:5px;">
+                <div class="flex">
+                    <button class="btn-add" onclick="changeScore('score1', 1)">+ GOL</button>
+                    <button class="btn-sub" onclick="changeScore('score1', -1)">-</button>
+                </div>
+                <div class="flex">
+                    <button class="btn-add" onclick="changeScore('fouls1', 1)">+ FALTA</button>
+                    <button class="btn-sub" onclick="changeScore('fouls1', -1)">-</button>
+                </div>
+            </div>
+            <div style="flex:1">
+                <input type="text" id="in-name2" placeholder="Nome Time 2">
+                <input type="text" id="in-logo2" placeholder="Link Brasão 2" style="margin-top:5px;">
+                <div class="flex">
+                    <button class="btn-add" onclick="changeScore('score2', 1)">+ GOL</button>
+                    <button class="btn-sub" onclick="changeScore('score2', -1)">-</button>
+                </div>
+                <div class="flex">
+                    <button class="btn-add" onclick="changeScore('fouls2', 1)">+ FALTA</button>
+                    <button class="btn-sub" onclick="changeScore('fouls2', -1)">-</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <label>Link Wallpaper:</label>
+        <input type="text" id="in-bg" placeholder="URL da imagem de fundo">
+    </div>
+
+    <button class="btn-reset btn-main" style="width:100%" id="master-reset">MASTER RESET (LIMPAR TUDO)</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBXAqDh68HlF2YWOr8wz_bSuv1ILytBppo",
+            authDomain: "placar-kendence.firebaseapp.com",
+            projectId: "placar-kendence",
+            databaseURL: "https://placar-kendence-default-rtdb.firebaseio.com",
+            storageBucket: "placar-kendence.firebasestorage.app",
+            messagingSenderId: "533821445617",
+            appId: "1:533821445617:web:0b62bce2a3fcdd3a3a2050"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const placarRef = ref(db, 'placar/');
+
+        let localData = { score1: 0, score2: 0, fouls1: 0, fouls2: 0, seconds: 0 };
+        let timerInterval;
+
+        // Escutar mudanças iniciais
+        onValue(placarRef, (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                localData = { ...localData, ...data };
+                document.getElementById('display-time').innerText = data.timer || "00:00";
+            }
+        });
+
+        // Funções de Placar e Faltas
+        window.changeScore = (field, value) => {
+            let newVal = (localData[field] || 0) + value;
+            if(newVal < 0) newVal = 0;
+            update(placarRef, { [field]: newVal });
+        };
+
+        // Inputs em tempo real
+        ['in-name1', 'in-name2', 'in-logo1', 'in-logo2', 'in-bg'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                const field = id.replace('in-', '');
+                update(placarRef, { [field]: e.target.value });
+            });
+        });
+
+        document.getElementById('periodo-select').addEventListener('change', (e) => {
+            update(placarRef, { periodo: e.target.value });
+        });
+
+        // Lógica do Cronômetro
+        document.getElementById('btn-play').onclick = () => {
+            if(timerInterval) return;
+            timerInterval = setInterval(() => {
+                localData.seconds++;
+                let m = Math.floor(localData.seconds / 60).toString().padStart(2, '0');
+                let s = (localData.seconds % 60).toString().padStart(2, '0');
+                let timeStr = `${m}:${s}`;
+                update(placarRef, { timer: timeStr, seconds: localData.seconds });
+            }, 1000);
+        };
+
+        document.getElementById('btn-pause').onclick = () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        };
+
+        document.getElementById('btn-reset-timer').onclick = () => {
+            localData.seconds = 0;
+            update(placarRef, { timer: "00:00", seconds: 0 });
+        };
+
+        document.getElementById('master-reset').onclick = () => {
+            if(confirm("Deseja resetar todo o placar?")) {
+                set(placarRef, {
+                    score1: 0, score2: 0, fouls1: 0, fouls2: 0,
+                    timer: "00:00", seconds: 0, periodo: "1° Tempo",
+                    name1: "Time 1", name2: "Time 2", logo1: "", logo2: "", bg: ""
+                });
+                location.reload();
+            }
+        };
+    </script>
+</body>
+</html>
