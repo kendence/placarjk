@@ -2,13 +2,15 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Broadcast Pro - Kendence F.C.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Painel Placar Responsivo - Yoshi 2026</title>
     <style>
         @font-face {
             font-family: 'Digital-7';
             src: url('https://fonts.cdnfonts.com/s/14352/Digital7-rg18.woff') format('woff');
         }
+
+        * { box-sizing: border-box; }
 
         body {
             margin: 0; padding: 0;
@@ -21,13 +23,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: space-between;
             overflow: hidden;
         }
 
-        /* Topo: Campeonato e Nomes */
+        /* Topo: Adaptável */
         .top-bar {
-            width: 85%;
-            margin-top: 25px;
+            width: 95%;
+            margin-top: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -35,150 +38,138 @@
 
         .champ-name {
             background: rgba(20, 20, 20, 0.9);
-            padding: 8px 40px;
-            border-radius: 12px 12px 0 0;
-            font-size: 1.4vw;
-            border: 1px solid #555;
+            padding: 5px 20px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.5vw; /* Tamanho relativo à largura */
+            border: 1px solid #444;
             text-transform: uppercase;
-            letter-spacing: 2px;
         }
 
         .teams-header {
             display: flex;
             width: 100%;
-            height: 70px;
+            height: 8vh; /* Altura relativa à tela */
             align-items: center;
             justify-content: center;
         }
 
         .name-box {
-            width: 42%;
+            flex: 1;
             height: 100%;
             display: flex;
             align-items: center;
-            padding: 0 25px;
-            font-size: 2.2vw;
+            padding: 0 15px;
+            font-size: 2.5vw;
             font-weight: 900;
             text-transform: uppercase;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
         }
 
-        .home-box { background: linear-gradient(90deg, #e53935, #8e0000); justify-content: flex-start; border-radius: 15px 0 0 15px; }
-        .away-box { background: linear-gradient(90deg, #1565c0, #0d47a1); justify-content: flex-end; border-radius: 0 15px 15px 0; }
+        .home-box { background: linear-gradient(90deg, #e53935, #8e0000); border-radius: 10px 0 0 10px; }
+        .away-box { background: linear-gradient(90deg, #1565c0, #0d47a1); border-radius: 0 10px 10px 0; justify-content: flex-end; }
         
         .vs-box {
             background: #222;
-            width: 50px;
-            height: 70px;
+            width: 8vw;
+            height: 10vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8vw;
+            font-size: 2vw;
             font-weight: bold;
             z-index: 2;
-            border: 3px solid #666;
-            transform: scale(1.1);
+            border: 2px solid #666;
+            margin: 0 -10px;
         }
 
-        /* Centro: Gols (Espaçados) e Logos */
+        /* Centro: Gols e Logos */
         .main-content {
             display: flex;
-            width: 95%;
-            justify-content: space-between;
+            width: 100%;
+            justify-content: space-around;
             align-items: center;
-            flex-grow: 1;
+            flex: 1;
             padding: 0 2vw;
         }
 
-        .logo-side { width: 18vw; text-align: center; }
-        .logo-img { width: 100%; filter: drop-shadow(0 0 15px rgba(255,255,255,0.2)); }
+        .logo-side { width: 15vw; display: flex; justify-content: center; }
+        .logo-img { max-width: 100%; max-height: 25vh; object-fit: contain; }
 
         .score-container {
             display: flex;
             align-items: center;
-            gap: 12vw; /* ESPAÇO ENTRE OS GOLS */
-            background: rgba(10, 20, 40, 0.7);
-            padding: 30px 60px;
-            border-radius: 40px;
-            border: 2px solid rgba(255,255,255,0.1);
-            position: relative;
-        }
-
-        /* Linha decorativa no meio dos gols se quiser simular a imagem */
-        .score-container::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            width: 2px;
-            height: 60%;
-            background: rgba(255,255,255,0.1);
+            gap: 10vw;
+            background: rgba(10, 20, 40, 0.6);
+            padding: 2vh 5vw;
+            border-radius: 20px;
         }
 
         .score-num {
             font-family: 'Digital-7';
-            font-size: 22vw; /* Gols bem grandes */
+            font-size: 25vw;
             color: #81d4fa;
-            text-shadow: 0 0 30px rgba(129, 212, 250, 0.6);
             line-height: 0.8;
+            text-shadow: 0 0 20px rgba(129, 212, 250, 0.5);
         }
 
-        /* Rodapé: Tempo e Faltas (Aumentadas) */
+        /* Rodapé: Faltas e Tempo */
         .bottom-bar {
-            width: 75%;
+            width: 90%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(0deg, #111 0%, #222 100%);
-            padding: 15px 50px;
-            border-radius: 30px 30px 0 0;
-            border: 2px solid #444;
-            margin-bottom: -5px;
+            background: #111;
+            padding: 1vh 3vw;
+            border-radius: 20px 20px 0 0;
+            border: 1px solid #333;
         }
 
-        .foul-box { text-align: center; min-width: 150px; }
-        .foul-label { font-size: 1vw; color: #aaa; text-transform: uppercase; margin-bottom: 5px; }
-        
-        /* FALTAS AUMENTADAS */
-        .foul-val { 
-            font-family: 'Digital-7'; 
-            font-size: 7vw; 
-            color: #ffff00; 
-            text-shadow: 0 0 15px rgba(255, 255, 0, 0.5);
-            line-height: 1;
-        }
+        .foul-box { text-align: center; }
+        .foul-val { font-family: 'Digital-7'; font-size: 8vw; color: #ffff00; line-height: 1; }
+        .foul-label { font-size: 1vw; text-transform: uppercase; color: #888; }
         
         .timer-container { text-align: center; }
-        #timer { font-family: 'Digital-7'; font-size: 7vw; color: #ff3d00; text-shadow: 0 0 15px rgba(255, 61, 0, 0.4); }
-        #periodo { font-size: 1.2vw; text-transform: uppercase; color: #fff; font-weight: bold; }
+        #timer { font-family: 'Digital-7'; font-size: 10vw; color: #ff3d00; line-height: 1; }
+        #periodo { font-size: 1.5vw; font-weight: bold; }
 
-        footer { font-size: 14px; padding: 5px; color: #444; width: 100%; text-align: center; background: #000; }
+        /* REGRAS PARA CELULAR (Telas Pequenas) */
+        @media (max-width: 768px) {
+            .champ-name { font-size: 3vw; }
+            .name-box { font-size: 4vw; }
+            .vs-box { font-size: 4vw; width: 12vw; }
+            .score-num { font-size: 30vw; }
+            .foul-label { font-size: 2.5vw; }
+            #periodo { font-size: 3vw; }
+            .logo-side { display: none; } /* Esconde logos no celular para sobrar espaço pros gols */
+        }
+
+        footer { font-size: 10px; color: #333; padding: 2px; }
     </style>
 </head>
 <body id="bg">
     <div class="top-bar">
         <div class="champ-name" id="campeonato">CARREGANDO...</div>
         <div class="teams-header">
-            <div class="name-box home-box" id="name1">TIME CASA</div>
+            <div class="name-box home-box" id="name1">CASA</div>
             <div class="vs-box">VS</div>
-            <div class="name-box away-box" id="name2">TIME VISITANTE</div>
+            <div class="name-box away-box" id="name2">VISITANTE</div>
         </div>
     </div>
 
     <div class="main-content">
-        <div class="logo-side"><img id="logo1" class="logo-img" src="" onerror="this.style.display='none'"></div>
+        <div class="logo-side"><img id="logo1" class="logo-img" src="" onerror="this.style.visibility='hidden'"></div>
         
         <div class="score-container">
             <div class="score-num" id="score1">00</div>
             <div class="score-num" id="score2">00</div>
         </div>
 
-        <div class="logo-side"><img id="logo2" class="logo-img" src="" onerror="this.style.display='none'"></div>
+        <div class="logo-side"><img id="logo2" class="logo-img" src="" onerror="this.style.visibility='hidden'"></div>
     </div>
 
     <div class="bottom-bar">
         <div class="foul-box">
-            <div class="foul-label">FALTAS</div>
             <div class="foul-val" id="fouls1">0</div>
+            <div class="foul-label">Faltas</div>
         </div>
 
         <div class="timer-container">
@@ -187,8 +178,8 @@
         </div>
 
         <div class="foul-box">
-            <div class="foul-label">FALTAS</div>
             <div class="foul-val" id="fouls2">0</div>
+            <div class="foul-label">Faltas</div>
         </div>
     </div>
 
@@ -217,17 +208,15 @@
             if (data) {
                 document.getElementById('timer').innerText = data.timer || "00:00";
                 document.getElementById('periodo').innerText = data.periodo || "1º TEMPO";
-                document.getElementById('name1').innerText = data.name1 || "TIME CASA";
-                document.getElementById('name2').innerText = data.name2 || "TIME VISITANTE";
+                document.getElementById('name1').innerText = data.name1 || "CASA";
+                document.getElementById('name2').innerText = data.name2 || "VISITANTE";
                 document.getElementById('score1').innerText = (data.score1 || 0).toString().padStart(2, '0');
                 document.getElementById('score2').innerText = (data.score2 || 0).toString().padStart(2, '0');
                 document.getElementById('fouls1').innerText = data.fouls1 || "0";
                 document.getElementById('fouls2').innerText = data.fouls2 || "0";
-                document.getElementById('campeonato').innerText = data.campeonato || "INFORMAÇÕES";
+                document.getElementById('campeonato').innerText = data.campeonato || "CAMPEONATO";
                 document.getElementById('logo1').src = data.logo1 || "";
                 document.getElementById('logo2').src = data.logo2 || "";
-                document.getElementById('logo1').style.display = data.logo1 ? 'block' : 'none';
-                document.getElementById('logo2').style.display = data.logo2 ? 'block' : 'none';
                 if(data.bg) document.body.style.backgroundImage = `url(${data.bg})`;
             }
         });
