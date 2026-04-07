@@ -20,6 +20,13 @@
 <body>
 
     <h2>Controle de Jogo</h2>
+   <div class="section">
+    <label>Nome do Campeonato / Informação:</label>
+    <div class="flex">
+        <input type="text" id="in-campeonato" placeholder="Ex: Final Copa Yoshi">
+        <button class="btn-add" id="btn-confirm-camp">CONFIRMAR</button>
+    </div>
+</div>
 
     <div class="section">
         <label>Tempo: <span id="display-time">00:00</span></label>
@@ -123,6 +130,12 @@
 
         let localData = { score1: 0, score2: 0, fouls1: 0, fouls2: 0, seconds: 0 };
         let timerInterval;
+
+document.getElementById('btn-confirm-camp').onclick = () => {
+    const nomeCamp = document.getElementById('in-campeonato').value;
+    update(placarRef, { campeonato: nomeCamp });
+    alert("Nome do campeonato atualizado!");
+};
 
         // Escutar mudanças iniciais
         onValue(placarRef, (snapshot) => {
